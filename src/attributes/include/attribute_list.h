@@ -1,29 +1,20 @@
 #pragma once
 
-#include <vector>
+#include "attribute_types.h"
+#include "base_attribute.h"
+
+#include <map>
 
 namespace PGame
 {
-    enum class AttributeType_e
-    {
-        DEXTERITY,
-        INTELLIGENCE,
-        STRENGTH,
-        VITALITY,
-    };
-
-    typedef struct
-    {
-        unsigned int numberOfPoints;
-    } Attribute_t;
-
     class AttributeList
     {
         public:
             AttributeList();
 
-            void Add(Attribute_t attribute);
+            void Add(AttributeType_e attributeType, BaseAttribute* attribute);
         private:
-            std::vector<Attribute_t> attributes;
+            std::map<AttributeType_e, BaseAttribute*> attributes;
+            std::map<AttributeType_e, unsigned int> data;
     };
 }

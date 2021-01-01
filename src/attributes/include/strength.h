@@ -1,17 +1,10 @@
 #pragma once
 
-#include "attribute.h"
-
-#include <map>
+#include "base_attribute.h"
 
 namespace PGame
 {
-    typedef struct
-    {
-        unsigned int numberOfPoints;
-    } StrengthAttribute_t;
-
-    class Strength: public Attribute
+    class Strength: public BaseAttribute
     {
         public:
             Strength();
