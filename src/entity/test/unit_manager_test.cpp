@@ -9,26 +9,49 @@ TEST(CreateUnitManager, CreateUnitManager1)
     UnitManager unitManager;
 }
 
-TEST(IncrementNumberOfPlayers, IncrementNumberOfPlayers1)
-{
-    UnitManager unitManager;
-    unsigned int startNumPlayers = unitManager.GetNumberOfPlayers();
-    unitManager.IncrementNumberOfPlayers();
-    ASSERT_EQ(startNumPlayers + 1, unitManager.GetNumberOfPlayers());
-}
-
-TEST(DecrementNumberOfPlayers, DecrementNumberOfPlayers1)
-{
-    UnitManager unitManager;
-    unsigned int startNumPlayers = unitManager.GetNumberOfPlayers();
-    unitManager.IncrementNumberOfPlayers();
-    ASSERT_EQ(startNumPlayers + 1, unitManager.GetNumberOfPlayers());
-    unitManager.DecrementNumberOfPlayers();
-    ASSERT_EQ(startNumPlayers, unitManager.GetNumberOfPlayers());
-}
-
 TEST(UnitManager_CreatePlayer, UnitManager_CreatePlayer1)
 {
     UnitManager unitManager;
+    unitManager.Reset();
+    ASSERT_EQ(true, unitManager.CreatePlayer("testUser"));
+}
+
+TEST(UnitManager_CreatePlayer, UnitManager_CreatePlayer2)
+{
+    UnitManager unitManager;
+    unitManager.Reset();
+    ASSERT_EQ(true, unitManager.CreatePlayer("testUser"));
     unitManager.CreatePlayer("testUser");
+}
+
+TEST(UnitManager_DeletePlayer, UnitManager_DeletePlayer1)
+{
+    UnitManager unitManager;
+    unitManager.Reset();
+    ASSERT_EQ(true, unitManager.CreatePlayer("testUser"));
+    ASSERT_EQ(true, unitManager.DeletePlayer("testUser"));
+}
+
+TEST(UnitManager_DeletePlayer, UnitManager_DeletePlayer2)
+{
+    UnitManager unitManager;
+    unitManager.Reset();
+    ASSERT_EQ(true, unitManager.CreatePlayer("testUser"));
+    ASSERT_EQ(true, unitManager.DeletePlayer("testUser"));
+    ASSERT_EQ(false, unitManager.DeletePlayer("testUser"));
+}
+
+TEST(UnitManager_DeletePlayer, UnitManager_DeletePlayer3)
+{
+    UnitManager unitManager;
+    unitManager.Reset();
+    ASSERT_EQ(false, unitManager.DeletePlayer("testUser"));
+}
+
+TEST(UnitManager_GetPlayerUuid, UnitManager_GetPlayerUuid1)
+{
+    UnitManager unitManager;
+    unitManager.Reset();
+    ASSERT_EQ(true, unitManager.CreatePlayer("testUser"));
+    ASSERT_NE("", unitManager.GetPlayerUuid("testUser"));
 }
