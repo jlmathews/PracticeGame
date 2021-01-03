@@ -1,7 +1,11 @@
 
 set(BINARY attrib_lib_test)
 
-set(SOURCES main.cpp damage_test.cpp)
+set(SOURCES
+    main.cpp
+    attribute_list_test.cpp
+    damage_test.cpp
+)
 
 add_executable(${BINARY} ${SOURCES})
 

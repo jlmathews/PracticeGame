@@ -4,6 +4,7 @@ add_library(attrib_lib
     STATIC
     attribute_list.cpp
     damage.cpp
+    strength.cpp
 )
 
 target_include_directories(attrib_lib

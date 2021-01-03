@@ -8,8 +8,8 @@ namespace PGame
     {
     }
 
-    void AttributeList::Add(Attribute_t attribute)
+    void AttributeList::Add(AttributeType_e attributeType, BaseAttribute* attribute)
     {
-        attributes.push_back(attribute);
+        attributes[attributeType] = attribute;
     }
 }

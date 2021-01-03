@@ -4,7 +4,5 @@
 
 namespace PGame
 {
-    Strength::Strength()
-    {
-    }
+    Strength::Strength() {}
 }

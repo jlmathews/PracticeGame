@@ -21,7 +21,22 @@ endif()
 
 include_directories(src)
 
+find_path(HIREDIS_HEADER hiredis)
+message(STATUS "HIREDIS_HEADER: ${HIREDIS_HEADER}")
+
+find_library(HIREDIS_LIB hiredis)
+message(STATUS "HIREDIS_LIB: ${HIREDIS_LIB}")
+
+find_path(REDIS_PLUS_PLUS_HEADER sw)
+message(STATUS "REDIS_PLUS_PLUS_HEADER: ${REDIS_PLUS_PLUS_HEADER}")
+
+find_library(REDIS_PLUS_PLUS_LIB redis++)
+message(STATUS "REDIS_PLUS_PLUS_LIB: ${REDIS_PLUS_PLUS_LIB}")
+
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(lib/googletest)
+#add_subdirectory(lib/hiredis)
+#add_subdirectory(lib/redis-plus-plus)
 add_subdirectory(lib/spdlog)
+add_subdirectory(lib/stduuid)
