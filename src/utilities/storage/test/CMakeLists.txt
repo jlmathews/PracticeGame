@@ -1,18 +1,18 @@
 
-set(BINARY entity_test)
+set(BINARY storage_test)
 
 set(SOURCES
     main.cpp
-    player_test.cpp
-    unit_manager_test.cpp
+    redis_adapter_test.cpp
+    storage_interface_test.cpp
 )
 
 add_executable(${BINARY} ${SOURCES})
 
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 
-target_link_libraries(${BINARY} PUBLIC
+target_link_libraries(${BINARY} PRIVATE
     gtest
     spdlog::spdlog
-    entity_lib
+    storage_lib
 )

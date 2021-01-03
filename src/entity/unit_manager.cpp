@@ -5,21 +5,21 @@
 
 namespace PGame
 {
-    UnitManager::UnitManager()
+    UnitManager::UnitManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage)
     {
         spdlog::info("Create UnitManager");
-        redis = std::make_unique<Redis>("tcp://127.0.0.1:6379");
+        storage = inputStorage;
     }
 
     unsigned int UnitManager::GetNumberOfPlayers()
     {
-        auto val = redis->get(NumberPlayersKey);
+        auto val = storage->GetValue(NumberPlayersKey);
         unsigned int numberOfPlayers = 0;
 
-        if(val)
+        if(val != "")
         {
-            spdlog::info("Number of players: {}", val.value());
-            numberOfPlayers = std::stoi(val.value());
+            spdlog::info("Number of players: {}", val);
+            numberOfPlayers = std::stoi(val);
         }
         else
         {
@@ -36,21 +36,18 @@ namespace PGame
 
         spdlog::debug("Get Player UUID: {}", playerName);
 
-        redis->smembers(playerListKey, std::back_inserter(playerList));
+        storage->SetMembers(playerListKey, playerList);
 
         for(auto tempPlayerUuid: playerList)
         {
             spdlog::debug("Player UUID: {}", tempPlayerUuid);
-            std::vector<OptionalString> tempPlayerName;
-            redis->hmget(tempPlayerUuid, {"name"}, std::back_inserter(tempPlayerName));
-            if(tempPlayerName.size() > 0 && tempPlayerName[0])
+            std::string tempPlayerName;
+            storage->HashGet(tempPlayerUuid, playerNameKey, tempPlayerName);
+            if(playerName == tempPlayerName)
             {
-                if(playerName == tempPlayerName[0].value())
-                {
-                    spdlog::debug("Found Player: {}, {}", tempPlayerName[0].value(), tempPlayerUuid);
-                    playerUuid = tempPlayerUuid;
-                    break;
-                }
+                spdlog::debug("Found Player: {}, {}", tempPlayerName, tempPlayerUuid);
+                playerUuid = tempPlayerUuid;
+                break;
             }
         }
 
@@ -68,11 +65,11 @@ namespace PGame
 
         if(GetNumberOfPlayers() == 0)
         {
-            redis->set(NumberPlayersKey, "1");
+            storage->SetValue(NumberPlayersKey, "1");
         }
         else
         {
-            redis->incr(NumberPlayersKey);
+            storage->Increment(NumberPlayersKey);
         }
     }
 
@@ -82,7 +79,7 @@ namespace PGame
 
         if(GetNumberOfPlayers() > 0)
         {
-            redis->decr(NumberPlayersKey);
+            storage->Decrement(NumberPlayersKey);
         }
         else
         {
@@ -102,14 +99,14 @@ namespace PGame
 
         auto playerUuid = UuidGenerator::GenerateUuid();
 
-        redis->hmset(playerUuid,
+        storage->HashSet(playerUuid,
         {
             std::make_pair(playerNameKey, playerName),
         });
 
         IncrementNumberOfPlayers();
 
-        redis->sadd(playerListKey, {playerUuid});
+        storage->SetAdd(playerListKey, playerUuid);
 
         return true;
     }
@@ -130,13 +127,8 @@ namespace PGame
 
         DecrementNumberOfPlayers();
 
-        redis->srem(playerListKey, playerUuid);
+        storage->SetRemove(playerListKey, playerUuid);
 
         return true;
-    }
-
-    void UnitManager::Reset()
-    {
-        redis->flushall();
     }
 }
