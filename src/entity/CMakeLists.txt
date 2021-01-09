@@ -11,16 +11,13 @@ add_library(entity_lib
 target_include_directories(entity_lib
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${HIREDIS_HEADER}
-    ${REDIS_PLUS_PLUS_HEADER}
 )
 
 target_link_libraries(entity_lib
     PUBLIC
     spdlog::spdlog
     movement_lib
-    ${HIREDIS_LIB}
-    ${REDIS_PLUS_PLUS_LIB}
+    storage_lib
     utility_lib
     stduuid
 )
