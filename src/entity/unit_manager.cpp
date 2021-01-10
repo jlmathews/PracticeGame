@@ -11,6 +11,11 @@ namespace PGame
         storage = inputStorage;
     }
 
+    /**
+     * Get number of players registered with unit manager
+     * 
+     * @returns number of players
+     */
     unsigned int UnitManager::GetNumberOfPlayers()
     {
         auto val = storage->GetValue(NumberPlayersKey);
@@ -29,6 +34,12 @@ namespace PGame
         return numberOfPlayers;
     }
 
+    /**
+     * Get UUID of player from players name
+     * 
+     * @param   playerName is the player name
+     * @returns Player UUID as string
+     */
     std::string UnitManager::GetPlayerUuid(std::string playerName)
     {
         std::vector<std::string> playerList;
@@ -59,6 +70,9 @@ namespace PGame
         return playerUuid;
     }
 
+    /**
+     * Increment number of players starting at zero.
+     */
     void UnitManager::IncrementNumberOfPlayers()
     {
         spdlog::debug("Increment number of players.");
@@ -73,6 +87,9 @@ namespace PGame
         }
     }
 
+    /**
+     * Decrement number of players. Number of players can't be less than zero.
+     */
     void UnitManager::DecrementNumberOfPlayers()
     {
         spdlog::debug("Decrement number of players.");
@@ -87,6 +104,12 @@ namespace PGame
         }
     }
 
+    /**
+     * Create a player with the specified name and save to storage.
+     * 
+     * @param   playerName is the player name
+     * @returns true if successfully created the player. false otherwise.
+     */
     bool UnitManager::CreatePlayer(std::string playerName)
     {
         spdlog::debug("Create Player: {}", playerName);
@@ -111,6 +134,12 @@ namespace PGame
         return true;
     }
 
+    /**
+     * Delete a player with the specified name from storage.
+     * 
+     * @param   playerName is the player name
+     * @returns true if successfully deleted the player. false otherwise.
+     */
     bool UnitManager::DeletePlayer(std::string playerName)
     {
         std::string playerUuid;
