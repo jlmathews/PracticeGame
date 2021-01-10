@@ -8,6 +8,9 @@
 
 namespace PGame
 {
+    /**
+     * Unit manager class
+     */
     class UnitManager
     {
         public:

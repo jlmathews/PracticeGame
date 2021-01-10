@@ -40,3 +40,5 @@ add_subdirectory(lib/googletest)
 #add_subdirectory(lib/redis-plus-plus)
 add_subdirectory(lib/spdlog)
 add_subdirectory(lib/stduuid)
+
+add_subdirectory(docs)
