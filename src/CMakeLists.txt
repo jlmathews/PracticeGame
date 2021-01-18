@@ -14,6 +14,7 @@ add_subdirectory(utilities/path)
 add_subdirectory(utilities/storage)
 
 add_subdirectory(practice/sol2)
+add_subdirectory(practice/toml11)
 
 set(SOURCES "")
 
