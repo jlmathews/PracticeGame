@@ -39,5 +39,6 @@ add_subdirectory(lib/googletest)
 add_subdirectory(lib/sol2)
 add_subdirectory(lib/spdlog)
 add_subdirectory(lib/stduuid)
+add_subdirectory(lib/toml11)
 
 add_subdirectory(docs)
