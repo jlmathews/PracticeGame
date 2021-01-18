@@ -15,7 +15,7 @@ class UnitManagerTest : public ::testing::Test
 
         void TearDown() override
         {
-            storage->DeleteAll("test:*");
+            //storage->DeleteAll("test:*");
         }
 
         std::shared_ptr<IStorage<RedisAdapter>> storage;

@@ -10,7 +10,10 @@ add_subdirectory(entity)
 add_subdirectory(items)
 add_subdirectory(movement)
 add_subdirectory(utilities)
+add_subdirectory(utilities/path)
 add_subdirectory(utilities/storage)
+
+add_subdirectory(practice/sol2)
 
 set(SOURCES "")
 

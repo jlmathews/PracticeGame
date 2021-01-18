@@ -1,6 +1,6 @@
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
 
-if(BUILD_DOC)
+if(BUILD_DOC MATCHES ON)
     find_package(Doxygen REQUIRED)
 
     set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
