@@ -3,6 +3,7 @@
 ## Checkout
 
 `git clone <project>`
+
 `git submodule update --init --recursive`
 
 ## Setup
