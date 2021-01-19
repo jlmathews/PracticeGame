@@ -3,6 +3,7 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 
+#include "lua_wrapper.h"
 #include "path.h"
 #include "spdlog/spdlog.h"
 
@@ -35,6 +36,34 @@ void createTable(sol::state &lua)
     spdlog::info("DPS: {}", output);
 }
 
+void createTableLuaWrapper()
+{
+    LuaWrapper lua;
+
+    spdlog::info("Run Create Table LUA Wrapper");
+
+    lua.RunCommand(R"(
+		data = {
+            name = "attack",
+            dmg = 5,
+            speed = 1.2
+        }
+	)");
+
+    auto data = lua["data"];
+    std::string name = lua["data"]["name"];
+    int damage = data["dmg"];
+    float speed = data["speed"];
+
+    spdlog::info("Name: {}, DMG: {}, Speed: {}", name, damage, speed);
+
+    lua.RunCommand("function f (d) return (d.dmg * d.speed) end");
+    std::string resultName = "output";
+    lua.RunCommand(resultName + " = f(data)");
+    float output = lua[resultName];
+    spdlog::info("DPS: {}", output);
+}
+
 void loadScript(sol::state &lua, std::string filename)
 {
     std::string path;
@@ -55,20 +84,18 @@ void appendLuaPath(sol::state &lua, std::string path)
 
 void battle()
 {
-    sol::state lua;
-    lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::package);
-    std::string path;
-    Path::GetCurrentDirectory(path);
-    appendLuaPath(lua, path);
+    LuaWrapper lua;
 
-    loadScript(lua, "rogue.lua");
-    loadScript(lua, "attack.lua");
+    lua.AppendCurrentPath();
+
+    lua.LoadScript("rogue.lua");
+    lua.LoadScript("attack.lua");
 
     spdlog::info("Create rogue.");
-    lua.script("rogue1 = Rogue:new()");
+    lua.RunCommand("rogue1 = Rogue:new()");
 
     spdlog::info("Set primary weapon to bow.");
-    lua.script("rogue1.player:setPrimaryWeapon(bow)");
+    lua.RunCommand("rogue1.player:setPrimaryWeapon(bow)");
 
     sol::table weapon = lua["bow"];
     std::string name = weapon["name"];
@@ -78,7 +105,7 @@ void battle()
     while(true)
     {
         spdlog::info("Player1 attack!");
-        lua.script("rogue1.player:attack(enemy1)");
+        lua.RunCommand("rogue1.player:attack(enemy1)");
 
         std::string enemy_name = lua["enemy1"]["name"];
         float enemy_hp = lua["enemy1"]["hp"];
@@ -86,14 +113,14 @@ void battle()
         if(enemy_hp < 0)
         {
             spdlog::info("Enemy {} defeated!", enemy_name);
-            lua.script("earned_exp = enemy1:getExperience()");
+            lua.RunCommand("earned_exp = enemy1:getExperience()");
             int earned_exp = lua["earned_exp"];
             spdlog::info("Earned Exp. {}", earned_exp);
             break;
         }
 
         spdlog::info("Enemy attack!");
-        lua.script("attack(enemy1, club, rogue1)");
+        lua.RunCommand("attack(enemy1, club, rogue1)");
 
         std::string rogue_name = lua["rogue1"]["name"];
         float rogue_hp = lua["rogue1"]["hp"];
@@ -113,6 +140,8 @@ void battle()
 int main() {
 	sol::state lua;
 
+    spdlog::set_level(spdlog::level::debug);
+
     spdlog::info("Practice sol2.");
 
 	lua.open_libraries(sol::lib::base);
@@ -120,6 +149,7 @@ int main() {
     lua.script("print('Test LUA')");
 
     createTable(lua);
+    createTableLuaWrapper();
     battle();
 
 	return 0;

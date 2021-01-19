@@ -19,6 +19,24 @@ if(CMAKE_CXX_COMPILER_LOADED)
   message(STATUS "The C++ compiler version is: ${CMAKE_CXX_COMPILER_VERSION}")
 endif()
 
+# Copy function modified from https://stackoverflow.com/questions/697560/how-to-copy-directory-from-source-tree-to-binary-tree
+macro(copy_lua_files srcDir destDir)
+    message(STATUS "Configuring directory ${destDir}")
+    make_directory(${destDir})
+
+    file(GLOB templateFiles RELATIVE ${srcDir} ${srcDir}/*.lua)
+    foreach(templateFile ${templateFiles})
+        set(srcTemplatePath ${srcDir}/${templateFile})
+        if(NOT IS_DIRECTORY ${srcTemplatePath})
+            message(STATUS "Configuring file ${templateFile}")
+            configure_file(
+                    ${srcTemplatePath}
+                    ${destDir}/${templateFile}
+                    @ONLY)
+        endif(NOT IS_DIRECTORY ${srcTemplatePath})
+    endforeach(templateFile)
+endmacro(configure_files)
+
 include_directories(src)
 
 find_path(HIREDIS_HEADER hiredis)
@@ -35,6 +53,7 @@ message(STATUS "REDIS_PLUS_PLUS_LIB: ${REDIS_PLUS_PLUS_LIB}")
 
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(lib/filesystem)
 add_subdirectory(lib/googletest)
 add_subdirectory(lib/sol2)
 add_subdirectory(lib/spdlog)
