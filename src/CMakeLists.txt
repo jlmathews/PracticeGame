@@ -10,6 +10,7 @@ add_subdirectory(entity)
 add_subdirectory(items)
 add_subdirectory(movement)
 add_subdirectory(utilities)
+add_subdirectory(utilities/lua_wrapper)
 add_subdirectory(utilities/path)
 add_subdirectory(utilities/storage)
 

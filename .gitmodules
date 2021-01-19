@@ -19,3 +19,6 @@
 [submodule "lib/toml11"]
 	path = lib/toml11
 	url = git@github.com:ToruNiina/toml11.git
+[submodule "lib/filesystem"]
+	path = lib/filesystem
+	url = git@github.com:gulrak/filesystem.git

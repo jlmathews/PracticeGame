@@ -12,6 +12,7 @@ target_include_directories(path_lib
 
 target_link_libraries(path_lib
     PRIVATE
+    ghc_filesystem
     spdlog::spdlog
 )
 

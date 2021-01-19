@@ -1,17 +1,18 @@
 
-set(BINARY sol2_practice)
+set(BINARY LuaWrapper)
 
 message("*** Lua include: ${LUA_INCLUDE_DIR}")
 message("*** Lua library: ${LUA_LIBRARIES}")
 
-copy_lua_files(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-
-add_executable(${BINARY}
-    main.cpp
+# generate a library from sources
+add_library(${BINARY}
+    STATIC
+    lua_wrapper.cpp
 )
 
 target_include_directories(${BINARY}
-  PRIVATE
+  PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${LUA_INCLUDE_DIR}
 )
 
@@ -20,5 +21,6 @@ target_link_libraries(${BINARY} PRIVATE
     ${LUA_LIBRARIES}
     path_lib
     sol2::sol2
-    LuaWrapper
 )
+
+add_subdirectory(test)
