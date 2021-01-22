@@ -1,6 +1,7 @@
 
-require "strength"
 require "dexterity"
+require "intelligence"
+require "strength"
 require "vitality"
 
 PrimaryAttributeList = {}
@@ -14,6 +15,7 @@ function PrimaryAttributeList:new ()
     cls.Strength = Strength:new()
     cls.Dexterity = Dexterity:new()
     cls.Vitality = Vitality:new()
+    cls.Intelligence = Intelligence:new()
 
     return cls
 end

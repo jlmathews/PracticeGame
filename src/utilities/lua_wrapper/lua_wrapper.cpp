@@ -8,7 +8,7 @@ namespace PGame
     LuaWrapper::LuaWrapper()
     {
         spdlog::info("{}", __func__);
-        lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::package);
+        lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::package, sol::lib::table);
     }
 
     void LuaWrapper::AppendPath(std::string path)
