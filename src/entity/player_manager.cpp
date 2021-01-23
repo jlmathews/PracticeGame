@@ -195,4 +195,20 @@ namespace PGame
 
         return true;
     }
+
+    void PlayerManager::ListPlayers(std::vector<std::string> &players)
+    {
+        std::vector<std::string> playerList;
+
+        // Get list of player UUID's
+        storage->SetMembers(playerListKey, playerList);
+
+        for(auto tempPlayerUuid: playerList)
+        {
+            std::string tempPlayerName;
+            storage->HashGet(tempPlayerUuid, playerNameKey, tempPlayerName);
+            spdlog::debug("Player UUID: {}, Name: {}", tempPlayerUuid, tempPlayerName);
+            players.push_back(tempPlayerName);
+        }
+    }
 }

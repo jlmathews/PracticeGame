@@ -1,34 +1,33 @@
 
-#include "beast.h"
-#include "position.h"
-#include "unit.h"
+#include "character_manager.h"
+#include "player_manager.h"
 
 #include "spdlog/spdlog.h"
 
-#include <sw/redis++/redis++.h>
-
 using namespace PGame;
-using namespace sw::redis;
+
+void menu()
+{
+    std::shared_ptr<IStorage<RedisAdapter>> storage;
+    storage = std::make_shared<IStorage<RedisAdapter>>("app1");
+    PlayerManager playerManager(storage);
+
+    spdlog::info("Number of Players: {}", playerManager.GetNumberOfPlayers());
+
+    std::vector<std::string> existingPlayers;
+    playerManager.ListPlayers(existingPlayers);
+    spdlog::info("Existing players:");
+    for(auto player: existingPlayers)
+    {
+        spdlog::info("- {}", player);
+    }
+}
 
 int main()
 {
-    Beast beast;
-    Position* position;
-
     spdlog::info("Start main.");
 
-    position = beast.GetPosition();
-    position->Print();
-    beast.Move(1, 5);
-    beast.Move(3, 2);
-    position->Print();
-
-    auto redis = Redis("tcp://127.0.0.1:6379");
-    auto val = redis.get("test");
-    if(val)
-    {
-        spdlog::info("Redis val: {}", val.value());
-    }
+    menu();
 
     return 0;
 }
