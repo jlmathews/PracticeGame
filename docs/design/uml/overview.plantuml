@@ -1,0 +1,71 @@
+@startuml
+object AccountManager {
+    getName() = "Get Account name"
+    getPlayers() = "Get list of players bound to account"
+    AddPlayer() = "Assign player to account"
+    RemovePlayer() = "Remove player from account"
+    getInventory() = "Get Shared inventory between all players"
+}
+
+object PlayerManager {
+    getName() = "Get player name"
+    getUUID() = "Get Unique ID"
+    getCharacters() = "Get list of characters assigned to player"
+    getInventory() = "Get items in inventory"
+    CreatePlayer() = "Create new player"
+    DeletePlayer() = "Delete player"
+    AddCharacter() = "Assign character to player"
+    RemoveCharacter() = "Remove character from player"
+}
+
+object CharacterManager {
+    getName() = "Get name of character"
+    getClass() = "Get character class type"
+    getAttributes() = "List of overall attributes"
+    getEquipment() = "List of assigned equipment"
+    CreateCharacter() = "Create new character"
+    DeleteCharacter() = "Delete character"
+}
+
+object InventoryManager {
+    getSizeInventory() = "Get max size of inventory"
+    getItems() = "Get items in inventory"
+}
+
+object ClassManager {
+    getClassName()
+    getListOfAttributes() = "Default attributes"
+    getAllSkills() = "List of possible skills"
+    getAvailableSkills() = "Skills that can be selected"
+}
+
+object AttributeManager {
+    vector<str> getAttributes()
+}
+
+object EquipmentManager {
+    vector<str> getEquipment()
+    assignEquipment(name)
+}
+
+object StatsManager {
+    vector<str> getStats()
+}
+
+object SkillManager {
+    vector<str> getSkills()
+    useSkill(str)
+}
+
+AccountManager *-- PlayerManager
+AccountManager *-- InventoryManager
+PlayerManager *-- CharacterManager
+PlayerManager *-- InventoryManager
+CharacterManager *-- ClassManager
+CharacterManager *-- AttributeManager
+CharacterManager *-- EquipmentManager
+ClassManager *-- AttributeManager
+ClassManager *-- SkillManager
+EquipmentManager *-- StatsManager
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+object EventManager {
+    vector<str> getEventTypes() = "List of event types - attack, heal, etc."
+    vector<str> getEventNames() = "List of event names"
+    vector<str> getRegisteredEvents()
+    uuid registerEventType(type, function) = "Register event by type"
+    uuid registerEventName(name, function) = "Register event by name"
+    unRegisterEvent(uuid)
+    triggerEvent(uuid)
+}
+
+object Event {
+    getEventName()
+    getEventType()
+    getEventData()
+}
+
+EventManager *-- Event
+@enduml
+
+@startuml
+Addon -> EventManager: Query Event Insertion Points
+note left
+There is two different ways to query events for trigger.
+1) Query event types such as attack, heal, etc.
+2) Query specific event by name.
+end note
+Addon -> EventManager: Register Callback
+note left
+Select event type or name.
+Select repeat. Can indicate the number of times or infinite.
+end note
+EventManager -> Addon: Generate UUID for Callback
+Character -> EventManager: Trigger event
+note right
+Characters trigger events through actions such as
+attack, heal, level, etc.
+end note
+EventManager -> Event: Create Event
+EventManager -> Addon: Execute callback (Event)
+note left
+Pass event to callback
+end note
+@enduml
+
+@startuml
+:Example;
+:Register callback on event type - attack;
+:Player attacks enemy;
+:Attack is input into event manager;
+:Generate Event;
+note left
+Event encapsulates details of attack.
+It exists until all callbacks registered to handle
+the event have completed processing it.
+end note
+:Execute callbacks that are registered with type attack;
+@enduml

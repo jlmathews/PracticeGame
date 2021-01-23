@@ -1,0 +1,34 @@
+@startuml
+:Menu;
+:Select Account;
+:Choose Create Player;
+repeat
+:Select Attributes;
+note left
+Player Name (Must be unique)
+Option to select class or later
+end note
+repeat while (Validate Paramters) is (error)
+->success;
+:Create Player;
+note left
+Create ID for player to map all data.
+Setup default data for player:
+Add one character with default attributes,
+name is the player name, level, etc.
+If class is selected then assign to character.
+end note
+:Create Default Character;
+note left
+A main character is added to player.
+Has same name as player.
+end note
+:Create default items;
+note left
+Add default items to players inventory.
+end note
+:Equip default items;
+note left
+Assign default items to main character.
+end note
+@enduml
