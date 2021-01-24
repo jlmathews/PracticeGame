@@ -15,14 +15,13 @@ add_subdirectory(utilities/path)
 add_subdirectory(utilities/storage)
 
 add_subdirectory(practice/sol2)
+add_subdirectory(practice/termox)
 add_subdirectory(practice/toml11)
 
-set(SOURCES "")
-
-add_library(${BINARY}_lib STATIC ${SOURCES})
+add_library(${BINARY}_lib INTERFACE)
 
 target_include_directories(${BINARY}_lib
-  PUBLIC
+  INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${HIREDIS_HEADER}
     ${REDIS_PLUS_PLUS_HEADER}
@@ -30,11 +29,11 @@ target_include_directories(${BINARY}_lib
 
 message("C++ compiler flags: ${flags}")
 target_compile_options(${BINARY}_lib
-    PRIVATE
+    INTERFACE
     ${flags}
 )
 
-target_link_libraries(${BINARY}_lib PUBLIC
+target_link_libraries(${BINARY}_lib INTERFACE
     spdlog::spdlog
     entity_lib
     items_lib

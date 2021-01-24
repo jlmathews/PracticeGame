@@ -16,4 +16,4 @@ if(BUILD_DOC MATCHES ON)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM )
-endif(BUILD_DOC)
+endif(BUILD_DOC MATCHES ON)
