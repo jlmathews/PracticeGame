@@ -22,3 +22,6 @@
 [submodule "lib/filesystem"]
 	path = lib/filesystem
 	url = git@github.com:gulrak/filesystem.git
+[submodule "lib/TermOx"]
+	path = lib/TermOx
+	url = git@github.com:a-n-t-h-o-n-y/TermOx.git

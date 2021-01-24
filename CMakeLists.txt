@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 project(PracticeGames LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -35,7 +35,7 @@ macro(copy_lua_files srcDir destDir)
                     @ONLY)
         endif(NOT IS_DIRECTORY ${srcTemplatePath})
     endforeach(templateFile)
-endmacro(configure_files)
+endmacro(copy_lua_files srcDir destDir)
 
 include_directories(src)
 
@@ -58,6 +58,7 @@ add_subdirectory(lib/googletest)
 add_subdirectory(lib/sol2)
 add_subdirectory(lib/spdlog)
 add_subdirectory(lib/stduuid)
+add_subdirectory(lib/TermOx)
 add_subdirectory(lib/toml11)
 
 add_subdirectory(docs)
