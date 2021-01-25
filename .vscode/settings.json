@@ -64,6 +64,9 @@
         "cinttypes": "cpp",
         "span": "cpp",
         "codecvt": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "csignal": "cpp",
+        "shared_mutex": "cpp",
+        "bit": "cpp"
     }
 }
