@@ -80,7 +80,7 @@ namespace PGame
     template <typename Adapter>
     void IStorage<Adapter>::SetMembers(std::string key, std::vector<std::string> &values)
     {
-        return adapter->SetMembers(tableName, key, values);
+        adapter->SetMembers(tableName, key, values);
     }
 
     template <typename Adapter>
@@ -109,6 +109,6 @@ namespace PGame
     template <typename Adapter>
     bool IStorage<Adapter>::DeleteAll(std::string pattern)
     {
-        adapter->DeleteAll(pattern);
+        return adapter->DeleteAll(pattern);
     }
 }

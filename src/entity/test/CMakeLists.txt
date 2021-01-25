@@ -3,8 +3,8 @@ set(BINARY entity_test)
 
 set(SOURCES
     main.cpp
-    player_test.cpp
-    unit_manager_test.cpp
+    character_manager_test.cpp
+    player_manager_test.cpp
 )
 
 add_executable(${BINARY} ${SOURCES})

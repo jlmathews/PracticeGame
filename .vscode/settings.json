@@ -60,6 +60,10 @@
         "thread": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "cinttypes": "cpp",
+        "span": "cpp",
+        "codecvt": "cpp",
+        "filesystem": "cpp"
     }
 }

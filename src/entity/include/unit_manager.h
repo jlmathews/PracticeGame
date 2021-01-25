@@ -14,22 +14,27 @@ namespace PGame
     class UnitManager
     {
         public:
-            UnitManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage);
+            UnitManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage, std::string numberUnitsKey,
+            std::string unitListKey, std::string unitNameKey);
 
-            unsigned int GetNumberOfPlayers();
-            std::string GetPlayerUuid(std::string playerName);
-            bool CreatePlayer(std::string playerName);
-            bool DeletePlayer(std::string playerName);
+            unsigned int GetNumberOfUnits();
+            std::string GetUnitUuid(std::string unitName);
+
+            bool CreateUnit(std::string unitName, std::initializer_list<std::pair<std::string, std::string>> keyValue);
+            bool DeleteUnit(std::string unitName);
+            void ListUnits(std::vector<std::string> &units);
+            bool UnitExists(std::string unitName);
+
+            void IncrementNumberOfUnits();
+            void DecrementNumberOfUnits();
 
         private:
             std::shared_ptr<IStorage<RedisAdapter>> storage;
 
-            std::string keyType = "official";
-            const std::string NumberPlayersKey = "UnitManager:NumberPlayers";
-            const std::string playerListKey = "UnitManager:PlayerList";
-            const std::string playerNameKey = "UnitManager:PlayerName";
+            std::string numberUnitsKey = "";
+            std::string unitListKey = "";
+            std::string unitNameKey = "";
 
-            void IncrementNumberOfPlayers();
-            void DecrementNumberOfPlayers();
+            bool GenerateUnit(std::string unitName, std::initializer_list<std::pair<std::string, std::string>> keyValue);
     };
 }

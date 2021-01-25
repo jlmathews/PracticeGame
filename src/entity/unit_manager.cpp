@@ -5,159 +5,213 @@
 
 namespace PGame
 {
-    UnitManager::UnitManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage)
+    // UnitManager::UnitManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage)
+    UnitManager::UnitManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage, std::string numberUnitsKey,
+            std::string unitListKey, std::string unitNameKey)
     {
         spdlog::info("Create UnitManager");
         storage = inputStorage;
+
+        this->numberUnitsKey = numberUnitsKey;
+        this->unitListKey = unitListKey;
+        this->unitNameKey = unitNameKey;
     }
 
     /**
-     * Get number of players registered with unit manager
+     * Get number of units registered with unit manager
      * 
-     * @returns number of players
+     * @returns number of units
      */
-    unsigned int UnitManager::GetNumberOfPlayers()
+    unsigned int UnitManager::GetNumberOfUnits()
     {
-        auto val = storage->GetValue(NumberPlayersKey);
-        unsigned int numberOfPlayers = 0;
+        auto val = storage->GetValue(numberUnitsKey);
+        unsigned int numberOfUnits = 0;
 
         if(val != "")
         {
-            spdlog::info("Number of players: {}", val);
-            numberOfPlayers = std::stoi(val);
+            spdlog::info("Number of units: {}", val);
+            numberOfUnits = std::stoi(val);
         }
         else
         {
-            spdlog::warn("Number of players not created yet.");
+            spdlog::warn("Number of units not created yet.");
         }
 
-        return numberOfPlayers;
+        return numberOfUnits;
     }
 
     /**
-     * Get UUID of player from players name
+     * Get UUID of unit from units name
      * 
-     * @param   playerName is the player name
-     * @returns Player UUID as string
+     * @param   unitName is the unit name
+     * @returns Unit UUID as string
      */
-    std::string UnitManager::GetPlayerUuid(std::string playerName)
+    std::string UnitManager::GetUnitUuid(std::string unitName)
     {
-        std::vector<std::string> playerList;
-        std::string playerUuid;
+        std::vector<std::string> unitList;
+        std::string unitUuid;
 
-        spdlog::debug("Get Player UUID: {}", playerName);
+        spdlog::debug("Get Unit UUID: {}", unitName);
 
-        storage->SetMembers(playerListKey, playerList);
+        storage->SetMembers(unitListKey, unitList);
 
-        for(auto tempPlayerUuid: playerList)
+        for(auto tempUnitUuid: unitList)
         {
-            spdlog::debug("Player UUID: {}", tempPlayerUuid);
-            std::string tempPlayerName;
-            storage->HashGet(tempPlayerUuid, playerNameKey, tempPlayerName);
-            if(playerName == tempPlayerName)
+            spdlog::debug("Unit UUID: {}", tempUnitUuid);
+            std::string tempUnitName;
+            storage->HashGet(tempUnitUuid, unitNameKey, tempUnitName);
+            if(unitName == tempUnitName)
             {
-                spdlog::debug("Found Player: {}, {}", tempPlayerName, tempPlayerUuid);
-                playerUuid = tempPlayerUuid;
+                spdlog::debug("Found Unit: {}, {}", tempUnitName, tempUnitUuid);
+                unitUuid = tempUnitUuid;
                 break;
             }
         }
 
-        if(playerUuid == "")
+        if(unitUuid == "")
         {
-            spdlog::warn("Cannot find player {}.", playerName);
+            spdlog::warn("Cannot find unit {}.", unitName);
         }
 
-        return playerUuid;
+        return unitUuid;
     }
 
     /**
-     * Increment number of players starting at zero.
+     * Increment number of units starting at zero.
      */
-    void UnitManager::IncrementNumberOfPlayers()
+    void UnitManager::IncrementNumberOfUnits()
     {
-        spdlog::debug("Increment number of players.");
+        spdlog::debug("Increment number of units.");
 
-        if(GetNumberOfPlayers() == 0)
+        if(GetNumberOfUnits() == 0)
         {
-            storage->SetValue(NumberPlayersKey, "1");
+            storage->SetValue(numberUnitsKey, "1");
         }
         else
         {
-            storage->Increment(NumberPlayersKey);
+            storage->Increment(numberUnitsKey);
         }
     }
 
     /**
-     * Decrement number of players. Number of players can't be less than zero.
+     * Decrement number of units. Number of units can't be less than zero.
      */
-    void UnitManager::DecrementNumberOfPlayers()
+    void UnitManager::DecrementNumberOfUnits()
     {
-        spdlog::debug("Decrement number of players.");
+        spdlog::debug("Decrement number of units.");
 
-        if(GetNumberOfPlayers() > 0)
+        if(GetNumberOfUnits() > 0)
         {
-            storage->Decrement(NumberPlayersKey);
+            storage->Decrement(numberUnitsKey);
         }
         else
         {
-            spdlog::warn("Cannot decrement number of players. Already 0.");
+            spdlog::warn("Cannot decrement number of units. Already 0.");
         }
     }
 
     /**
-     * Create a player with the specified name and save to storage.
+     * Generate a unit with the specified name and save to storage.
      * 
-     * @param   playerName is the player name
-     * @returns true if successfully created the player. false otherwise.
+     * @param   unitName is the unit name
+     * @returns true if successfully generated the unit. false otherwise.
      */
-    bool UnitManager::CreatePlayer(std::string playerName)
+    bool UnitManager::GenerateUnit(std::string unitName, std::initializer_list<std::pair<std::string, std::string>> keyValue)
     {
-        spdlog::debug("Create Player: {}", playerName);
+        auto unitUuid = UuidGenerator::GenerateUuid();
 
-        if(GetPlayerUuid(playerName) != "")
-        {
-            spdlog::warn("Cannot create player {}.", playerName);
-            return false;
-        }
+        storage->HashSet(unitUuid, keyValue);
 
-        auto playerUuid = UuidGenerator::GenerateUuid();
+        IncrementNumberOfUnits();
 
-        storage->HashSet(playerUuid,
-        {
-            std::make_pair(playerNameKey, playerName),
-        });
-
-        IncrementNumberOfPlayers();
-
-        storage->SetAdd(playerListKey, playerUuid);
+        storage->SetAdd(unitListKey, unitUuid);
 
         return true;
     }
 
     /**
-     * Delete a player with the specified name from storage.
-     * 
-     * @param   playerName is the player name
-     * @returns true if successfully deleted the player. false otherwise.
+     * Create a unit with the specified name and save to storage.
+     *
+     * @param   unitName is the unit name
+     * @returns true if successfully created the unit. false otherwise.
      */
-    bool UnitManager::DeletePlayer(std::string playerName)
+    bool UnitManager::CreateUnit(std::string unitName, std::initializer_list<std::pair<std::string, std::string>> keyValue)
     {
-        std::string playerUuid;
+        spdlog::debug("Create Unit: {}", unitName);
 
-        spdlog::debug("Delete Player: {}", playerName);
-
-        playerUuid = GetPlayerUuid(playerName);
-
-        if(playerUuid == "")
+        // If unit exists, then cannot create unit with same name.
+        if(UnitExists(unitName))
         {
-            spdlog::warn("Cannot delete player {}.", playerName);
+            spdlog::warn("Cannot create unit {}. Name already exists.", unitName);
             return false;
         }
 
-        DecrementNumberOfPlayers();
-
-        storage->SetRemove(playerListKey, playerUuid);
+        if(!GenerateUnit(unitName, keyValue))
+        {
+            spdlog::error("Failed to create unit {}.", unitName);
+            return false;
+        }
 
         return true;
+    }
+
+    /**
+     * Delete a unit with the specified name from storage.
+     *
+     * @param   unitName is the unit name
+     * @returns true if successfully deleted the unit. false otherwise.
+     */
+    bool UnitManager::DeleteUnit(std::string unitName)
+    {
+        std::string unitUuid;
+
+        spdlog::debug("Delete Unit: {}", unitName);
+
+        if(!UnitExists(unitName))
+        {
+            spdlog::warn("Cannot delete unit {}.", unitName);
+            return false;
+        }
+
+        unitUuid = GetUnitUuid(unitName);
+
+        DecrementNumberOfUnits();
+
+        storage->SetRemove(unitListKey, unitUuid);
+
+        return true;
+    }
+
+    /**
+     * Check if unit exists.
+     *
+     * @param   unitName is the unit name
+     * @returns true if unit exists. false otherwise.
+     */
+    bool UnitManager::UnitExists(std::string unitName)
+    {
+        // If empty string is returned, then unit does not exist.
+        if("" == GetUnitUuid(unitName))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    void UnitManager::ListUnits(std::vector<std::string> &units)
+    {
+        std::vector<std::string> unitList;
+
+        // Get list of unit UUID's
+        storage->SetMembers(unitListKey, unitList);
+
+        for(auto tempUnitUuid: unitList)
+        {
+            std::string tempUnitName;
+            storage->HashGet(tempUnitUuid, unitNameKey, tempUnitName);
+            spdlog::debug("Unit UUID: {}, Name: {}", tempUnitUuid, tempUnitName);
+            units.push_back(tempUnitName);
+        }
     }
 }

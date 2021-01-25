@@ -3,8 +3,9 @@
 add_library(entity_lib
     STATIC
     beast.cpp
-    player.cpp
+    character_manager.cpp
     unit.cpp
+    player_manager.cpp
     unit_manager.cpp
 )
 
