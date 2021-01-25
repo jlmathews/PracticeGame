@@ -38,6 +38,12 @@ then
         printf 'Make failed\n'
         exit 2
     fi
+elif [ $GenerateDocuments = "ON" ]
+then
+    if ! make doc_doxygen; then
+        printf 'Make failed\n'
+        exit 2
+    fi
 else
     if ! make all; then
         printf 'Make failed\n'
