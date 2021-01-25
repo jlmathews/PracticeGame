@@ -3,6 +3,11 @@ project(PracticeGames LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Build Options
+
+option(BUILD_TESTS "Build Tests" OFF)
+
+
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "C++ flags, Debug configuration: ${CMAKE_CXX_FLAGS_DEBUG}")
 message("C++ compiler flags: ${CMAKE_CXX_FLAGS}")
@@ -50,6 +55,11 @@ message(STATUS "REDIS_PLUS_PLUS_HEADER: ${REDIS_PLUS_PLUS_HEADER}")
 
 find_library(REDIS_PLUS_PLUS_LIB redis++)
 message(STATUS "REDIS_PLUS_PLUS_LIB: ${REDIS_PLUS_PLUS_LIB}")
+
+
+if(BUILD_TESTS MATCHES ON)
+    enable_testing()
+endif(BUILD_TESTS MATCHES ON)
 
 add_subdirectory(src)
 add_subdirectory(test)

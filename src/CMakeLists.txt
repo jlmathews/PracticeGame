@@ -1,5 +1,5 @@
 
-set(BINARY ${CMAKE_PROJECT_NAME})
+set(BINARY ${CMAKE_PROJECT_NAME}_lib)
 
 option(USE_LIBRARY "Compile sources into a library" OFF)
 message(STATUS "Compile sources into a library? ${USE_LIBRARY}")
@@ -18,9 +18,9 @@ add_subdirectory(practice/sol2)
 add_subdirectory(practice/termox)
 add_subdirectory(practice/toml11)
 
-add_library(${BINARY}_lib INTERFACE)
+add_library(${BINARY} INTERFACE)
 
-target_include_directories(${BINARY}_lib
+target_include_directories(${BINARY}
   INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${HIREDIS_HEADER}
@@ -28,12 +28,12 @@ target_include_directories(${BINARY}_lib
 )
 
 message("C++ compiler flags: ${flags}")
-target_compile_options(${BINARY}_lib
+target_compile_options(${BINARY}
     INTERFACE
     ${flags}
 )
 
-target_link_libraries(${BINARY}_lib INTERFACE
+target_link_libraries(${BINARY} INTERFACE
     spdlog::spdlog
     entity_lib
     items_lib

@@ -1,18 +1,19 @@
 
-set(BINARY ${CMAKE_PROJECT_NAME})
+set(BINARY ${CMAKE_PROJECT_NAME}App)
+set(PROJECT_LIB ${CMAKE_PROJECT_NAME}_lib)
 
-add_executable(${BINARY}_run
+add_executable(${BINARY}
     main.cpp
 )
 
-target_include_directories(${BINARY}_run
+target_include_directories(${BINARY}
   PUBLIC
     ${HIREDIS_HEADER}
     ${REDIS_PLUS_PLUS_HEADER}
 )
 
-target_link_libraries(${BINARY}_run PRIVATE
-    ${BINARY}_lib
+target_link_libraries(${BINARY} PRIVATE
+    ${PROJECT_LIB}
     spdlog::spdlog
     ${HIREDIS_LIB}
     ${REDIS_PLUS_PLUS_LIB}
