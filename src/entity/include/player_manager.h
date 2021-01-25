@@ -2,6 +2,7 @@
 
 #include "redis_adapter.h"
 #include "storage_interface.h"
+#include "unit_manager.h"
 
 #include <string>
 #include <memory>
@@ -17,7 +18,7 @@ namespace PGame
             PlayerManager(std::shared_ptr<IStorage<RedisAdapter>> inputStorage);
 
             unsigned int GetNumberOfPlayers();
-            std::string GetPlayerUuid(std::string playerName);
+            std::string GetPlayerUUID(std::string playerName);
 
             bool CreatePlayer(std::string playerName);
             bool DeletePlayer(std::string playerName);
@@ -25,16 +26,13 @@ namespace PGame
             bool PlayerExists(std::string playerName);
 
         private:
-            std::shared_ptr<IStorage<RedisAdapter>> storage;
+            std::unique_ptr<UnitManager> unitManager;
 
-            std::string keyType = "official";
             const std::string NumberPlayersKey = "PlayerManager:NumberPlayers";
             const std::string playerListKey = "PlayerManager:PlayerList";
             const std::string playerNameKey = "PlayerManager:PlayerName";
 
             void IncrementNumberOfPlayers();
             void DecrementNumberOfPlayers();
-
-            bool GeneratePlayer(std::string playerName);
     };
 }

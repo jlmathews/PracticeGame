@@ -3,11 +3,10 @@
 add_library(entity_lib
     STATIC
     beast.cpp
-    character.cpp
     character_manager.cpp
-    player.cpp
     unit.cpp
     player_manager.cpp
+    unit_manager.cpp
 )
 
 target_include_directories(entity_lib

@@ -4,7 +4,6 @@ set(BINARY entity_test)
 set(SOURCES
     main.cpp
     character_manager_test.cpp
-    player_test.cpp
     player_manager_test.cpp
 )
 

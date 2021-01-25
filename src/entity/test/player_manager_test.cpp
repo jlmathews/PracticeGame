@@ -66,14 +66,14 @@ TEST_F(PlayerManagerTest, PlayerManager_DeletePlayer3)
 TEST_F(PlayerManagerTest, PlayerManager_GetPlayerUuid1)
 {
     PlayerManager playerManager(storage);
-    ASSERT_EQ("", playerManager.GetPlayerUuid("PlayerManager:testUser"));
+    ASSERT_EQ("", playerManager.GetPlayerUUID("PlayerManager:testUser"));
 }
 
 TEST_F(PlayerManagerTest, PlayerManager_GetPlayerUuid2)
 {
     PlayerManager playerManager(storage);
     ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser"));
-    ASSERT_NE("", playerManager.GetPlayerUuid("PlayerManager:testUser"));
+    ASSERT_NE("", playerManager.GetPlayerUUID("PlayerManager:testUser"));
 }
 
 TEST_F(PlayerManagerTest, PlayerManager_GetPlayerUuid3)
@@ -81,16 +81,16 @@ TEST_F(PlayerManagerTest, PlayerManager_GetPlayerUuid3)
     PlayerManager playerManager(storage);
     ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser"));
     ASSERT_EQ(true, playerManager.DeletePlayer("PlayerManager:testUser"));
-    ASSERT_EQ("", playerManager.GetPlayerUuid("PlayerManager:testUser"));
+    ASSERT_EQ("", playerManager.GetPlayerUUID("PlayerManager:testUser"));
 }
 
-TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers1)
+TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers_NoPlayers)
 {
     PlayerManager playerManager(storage);
     ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
 }
 
-TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers2)
+TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers_AfterCreatePlayers)
 {
     PlayerManager playerManager(storage);
     ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
@@ -98,7 +98,7 @@ TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers2)
     ASSERT_EQ(1, playerManager.GetNumberOfPlayers());
 }
 
-TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers3)
+TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers_CreateDelete_Players)
 {
     PlayerManager playerManager(storage);
     ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
@@ -107,7 +107,7 @@ TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers3)
     ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
 }
 
-TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers4)
+TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers_MultiplePlayers)
 {
     PlayerManager playerManager(storage);
     ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
@@ -115,4 +115,43 @@ TEST_F(PlayerManagerTest, PlayerManager_GetNumberOfPlayers4)
     ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser2"));
     ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser3"));
     ASSERT_EQ(3, playerManager.GetNumberOfPlayers());
+}
+
+TEST_F(PlayerManagerTest, PlayerManager_ListPlayers_OnePlayer)
+{
+    PlayerManager playerManager(storage);
+    ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
+    ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser1"));
+
+    std::vector<std::string> existingPlayers;
+    playerManager.ListPlayers(existingPlayers);
+
+    ASSERT_EQ(true, std::count(existingPlayers.begin(), existingPlayers.end(), "PlayerManager:testUser1"));
+}
+
+TEST_F(PlayerManagerTest, PlayerManager_ListPlayers_MultiplePlayers)
+{
+    PlayerManager playerManager(storage);
+    ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
+    ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser1"));
+    ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser2"));
+    ASSERT_EQ(true, playerManager.CreatePlayer("PlayerManager:testUser3"));
+
+    std::vector<std::string> existingPlayers;
+    playerManager.ListPlayers(existingPlayers);
+
+    ASSERT_EQ(true, std::count(existingPlayers.begin(), existingPlayers.end(), "PlayerManager:testUser1"));
+    ASSERT_EQ(true, std::count(existingPlayers.begin(), existingPlayers.end(), "PlayerManager:testUser2"));
+    ASSERT_EQ(true, std::count(existingPlayers.begin(), existingPlayers.end(), "PlayerManager:testUser3"));
+}
+
+TEST_F(PlayerManagerTest, PlayerManager_ListPlayers_NoPlayers)
+{
+    PlayerManager playerManager(storage);
+    ASSERT_EQ(0, playerManager.GetNumberOfPlayers());
+
+    std::vector<std::string> existingPlayers;
+    playerManager.ListPlayers(existingPlayers);
+
+    ASSERT_EQ(0, existingPlayers.size());
 }

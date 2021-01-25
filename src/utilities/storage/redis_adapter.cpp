@@ -37,13 +37,13 @@ namespace PGame
     long long RedisAdapter::Increment(std::string table, std::string key)
     {
         spdlog::debug("{}: Key {}", __func__, key);
-        redis->incr(table + ":" + key);
+        return redis->incr(table + ":" + key);
     }
 
     long long RedisAdapter::Decrement(std::string table, std::string key)
     {
         spdlog::debug("{}: Key {}", __func__, key);
-        redis->decr(table + ":" + key);
+        return redis->decr(table + ":" + key);
     }
 
     bool RedisAdapter::SetAdd(std::string table, std::string key, std::string value)
