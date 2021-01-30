@@ -5,6 +5,10 @@ require "rogue"
 print("Create Rogue")
 r = Rogue:new()
 
+print(r.player.PrimaryAttributes.Intelligence:getName())
+print(r.player.PrimaryAttributes.Intelligence:getDescription())
+print(r.player.PrimaryAttributes.Intelligence:getValue())
+print("----------------")
 print(r.player.PrimaryAttributes.Strength:getName())
 print(r.player.PrimaryAttributes.Strength:getDescription())
 print(r.player.PrimaryAttributes.Strength:getValue())

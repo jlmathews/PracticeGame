@@ -85,55 +85,68 @@ void appendLuaPath(sol::state &lua, std::string path)
 void battle()
 {
     LuaWrapper lua;
+    std::string charName = "playerNameTest";
 
     lua.AppendCurrentPath();
 
-    lua.LoadScript("rogue.lua");
+    lua.LoadScript("character_class_list.lua");
     lua.LoadScript("attack.lua");
 
-    spdlog::info("Create rogue.");
-    lua.RunCommand("rogue1 = Rogue:new()");
-
-    spdlog::info("Set primary weapon to bow.");
-    lua.RunCommand("rogue1.player:setPrimaryWeapon(bow)");
-
-    sol::table weapon = lua["bow"];
-    std::string name = weapon["name"];
-    int damage = weapon["max_dmg"];
-    float speed = weapon["speed"];
-
-    while(true)
+    lua.RunCommand("numCharacterClasses = characterClassList:NumCharacterTypes()");
+    int numCharacterClasses = lua["numCharacterClasses"];
+    spdlog::info("Number of character class types: {}", numCharacterClasses);
+    for(int i = 1; i <= numCharacterClasses; i++)
     {
-        spdlog::info("Player1 attack!");
-        lua.RunCommand("rogue1.player:attack(enemy1)");
+        lua.RunCommand("characterName = characterClassList.list[" + std::to_string(i) + "].name");
+        std::string className = lua["characterName"];
 
-        std::string enemy_name = lua["enemy1"]["name"];
-        float enemy_hp = lua["enemy1"]["hp"];
+        spdlog::info("Create {} type character.", className);
+        lua.RunCommand(charName + " = " + className + ":new()");
 
-        if(enemy_hp < 0)
+        spdlog::info("Set primary weapon to bow.");
+        lua.RunCommand(charName + ".player:setPrimaryWeapon(bow)");
+
+        sol::table weapon = lua["bow"];
+        std::string name = weapon["name"];
+        int damage = weapon["max_dmg"];
+        float speed = weapon["speed"];
+
+        spdlog::info("Create enemy.");
+        lua.RunCommand("enemy1 = enemy:new(nil)");
+
+        while(true)
         {
-            spdlog::info("Enemy {} defeated!", enemy_name);
-            lua.RunCommand("earned_exp = enemy1:getExperience()");
-            int earned_exp = lua["earned_exp"];
-            spdlog::info("Earned Exp. {}", earned_exp);
-            break;
+            spdlog::info("Player1 attack!");
+            lua.RunCommand(charName + ".player:attack(enemy1)");
+
+            std::string enemy_name = lua["enemy1"]["name"];
+            float enemy_hp = lua["enemy1"]["hp"];
+
+            if(enemy_hp < 0)
+            {
+                spdlog::info("Enemy {} defeated!", enemy_name);
+                lua.RunCommand("earned_exp = enemy1:getExperience()");
+                int earned_exp = lua["earned_exp"];
+                spdlog::info("Earned Exp. {}", earned_exp);
+                break;
+            }
+
+            spdlog::info("Enemy attack!");
+            lua.RunCommand("attack(enemy1, club, " + charName + ")");
+
+            std::string class_type_name = lua[charName]["name"];
+            float player_hp = lua[charName]["hp"];
+
+            if(player_hp <= 0)
+            {
+                spdlog::info("Lost battle to {}!", enemy_name);
+                break;
+            }
+
+            spdlog::info("Weapon: {}, Max DMG: {}, Speed: {}", name, damage, speed);
+            spdlog::info("Player: {}, HP: {}", class_type_name, player_hp);
+            spdlog::info("Enemy: {}, HP: {}", enemy_name, enemy_hp);
         }
-
-        spdlog::info("Enemy attack!");
-        lua.RunCommand("attack(enemy1, club, rogue1)");
-
-        std::string rogue_name = lua["rogue1"]["name"];
-        float rogue_hp = lua["rogue1"]["hp"];
-
-        if(rogue_hp <= 0)
-        {
-            spdlog::info("Lost battle to {}!", enemy_name);
-            break;
-        }
-
-        spdlog::info("Weapon: {}, Max DMG: {}, Speed: {}", name, damage, speed);
-        spdlog::info("Player: {}, HP: {}", rogue_name, rogue_hp);
-        spdlog::info("Enemy: {}, HP: {}", enemy_name, enemy_hp);
     }
 }
 

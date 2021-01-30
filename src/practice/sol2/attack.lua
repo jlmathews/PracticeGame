@@ -26,11 +26,11 @@ enemy = {
 }
 
 
-function enemy:new (o)
-    o = o or {}
-    setmetatable(o, self)
+function enemy:new ()
+    local cls = {}
+    setmetatable(cls, self)
     self.__index = self
-    return o
+    return cls
 end
 
 function enemy:getExperience()
@@ -40,7 +40,7 @@ function enemy:getExperience()
     return 0
 end
 
-enemy1 = enemy:new(nil)
+--enemy1 = enemy:new(nil)
 
 club = {
     name = "club",

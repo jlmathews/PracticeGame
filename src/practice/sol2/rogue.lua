@@ -13,6 +13,7 @@ function Rogue:new ()
     cls.stamina = 200
     cls.player = PlayerBase:new(nil)
 
+    cls.player.PrimaryAttributes.Intelligence:setValue(8)
     cls.player.PrimaryAttributes.Strength:setValue(10)
     cls.player.PrimaryAttributes.Dexterity:setValue(20)
     cls.player.PrimaryAttributes.Vitality:setValue(13)
