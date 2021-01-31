@@ -31,6 +31,7 @@ namespace PGame
 
         private:
             sol::state lua;
+            std::vector<std::string> pathList;
     };
 }
 

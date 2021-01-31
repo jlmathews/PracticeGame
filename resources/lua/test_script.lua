@@ -1,5 +1,5 @@
 
-require "rogue"
+require "classes.rogue"
 
 
 print("Create Rogue")

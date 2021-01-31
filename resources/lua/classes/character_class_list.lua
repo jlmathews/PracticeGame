@@ -1,7 +1,7 @@
 
-require "mage"
-require "rogue"
-require "warrior"
+require "classes.mage"
+require "classes.rogue"
+require "classes.warrior"
 
 CharacterClassList = {}
 CharacterClassList.__index = CharacterClassList

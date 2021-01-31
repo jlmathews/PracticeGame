@@ -1,5 +1,5 @@
 
-require "primary_attribute"
+require "attributes.primary_attribute"
 
 Dexterity = {}
 Dexterity.__index = Dexterity

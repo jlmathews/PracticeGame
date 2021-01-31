@@ -24,6 +24,10 @@ LUAINC=/usr/include/lua5.3/
 LUALIB="/usr/lib/x86_64-linux-gnu;/usr/lib/x86_64-linux-gnu/liblua5.3.so"
 
 mkdir build/
+# Remove old resources directory if it exists
+rm -rf build/resources
+# Copy resources directory to build directory
+cp -r resources/ build/resources
 cd build/
 
 # cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=lib/hiredis/build -DCMAKE_INSTALL_PREFIX=build/lib/ -DREDIS_PLUS_PLUS_BUILD_SHARED=OFF -DREDIS_PLUS_PLUS_BUILD_TEST=OFF -DREDIS_PLUS_PLUS_CXX_STANDARD=17 ..

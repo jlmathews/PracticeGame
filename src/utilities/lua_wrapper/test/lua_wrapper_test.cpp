@@ -9,16 +9,19 @@ TEST(LuaWrapper_Create, LuaWrapper_Create1)
     LuaWrapper luaWrapper;
 }
 
-TEST(LuaWrapper_LoadScript, LuaWrapper_LoadScript_Found)
-{
-    LuaWrapper luaWrapper;
-    ASSERT_EQ(true, luaWrapper.LoadScript("test.lua"));
-}
-
 TEST(LuaWrapper_LoadScript, LuaWrapper_LoadScript_InvalidScript)
 {
     LuaWrapper luaWrapper;
-    ASSERT_EQ(false, luaWrapper.LoadScript("invalid_script_name.lua"));
+
+    ASSERT_EQ(false, luaWrapper.LoadScript("test.lua"));
+}
+
+TEST(LuaWrapper_LoadScript, LuaWrapper_LoadScript_Found)
+{
+    LuaWrapper luaWrapper;
+    luaWrapper.AppendCurrentPath();
+
+    ASSERT_EQ(true, luaWrapper.LoadScript("test.lua"));
 }
 
 TEST(LuaWrapper_RunCommand, LuaWrapper_RunCommand_CreateVar)

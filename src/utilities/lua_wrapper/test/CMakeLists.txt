@@ -17,5 +17,6 @@ target_link_libraries(${BINARY} PRIVATE
     gtest
     spdlog::spdlog
     LuaWrapper
+    ${LUA_LIBRARIES}
     sol2::sol2
 )

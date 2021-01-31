@@ -13,7 +13,18 @@ namespace PGame
 
     void LuaWrapper::AppendPath(std::string path)
     {
-        std::string command = "package.path = package.path..';" + path + "/?.lua'";
+        std::string command;
+        pathList.push_back(path);
+
+        command = "package.path = package.path..'";
+
+        for(auto luaPath: pathList)
+        {
+            command += ";" + path + "/?.lua";
+        }
+
+        command += "'";
+
         spdlog::debug("Updated Package path: {}", command);
         lua.script(command);
     }
@@ -28,19 +39,26 @@ namespace PGame
 
     bool LuaWrapper::LoadScript(std::string filename)
     {
-        std::string path = "";
+        std::string full_path = "";
 
-        Path::GetCurrentDirectory(path);
-        Path::Append(path, filename);
-
-        if(!Path::Exists(path))
+        for(auto path: pathList)
         {
-            spdlog::error("Cannot find script {}", path);
+            Path::Append(path, filename);
+            if(Path::Exists(path))
+            {
+                full_path = path;
+                break;
+            }
+        }
+
+        if("" == full_path)
+        {
+            spdlog::error("Cannot find script {}", full_path);
             return false;
         }
 
-        spdlog::debug("Load Lua Script: {}", path);
-        lua.script_file(path);
+        spdlog::debug("Load Lua Script: {}", full_path);
+        lua.script_file(full_path);
 
         return true;
     }
