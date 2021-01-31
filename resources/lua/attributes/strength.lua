@@ -1,5 +1,5 @@
 
-require "primary_attribute"
+require "attributes.primary_attribute"
 
 Strength = {}
 Strength.__index = Strength

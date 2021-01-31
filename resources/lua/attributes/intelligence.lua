@@ -1,5 +1,5 @@
 
-require "primary_attribute"
+require "attributes.primary_attribute"
 
 Intelligence = {}
 Intelligence.__index = Intelligence

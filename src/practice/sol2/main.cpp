@@ -87,14 +87,20 @@ void battle()
     LuaWrapper lua;
     std::string charName = "playerNameTest";
 
-    lua.AppendCurrentPath();
+    // Append resources/lua path to LUA path so it can find scripts
+    std::string path;
+    Path::GetRootDirectory(path);
+    spdlog::info("Root directory: {}", path);
+    Path::Append(path, "resources");
+    Path::Append(path, "lua");
+    lua.AppendPath(path);
 
-    lua.LoadScript("character_class_list.lua");
-    lua.LoadScript("attack.lua");
+    lua.LoadScript("init.lua");
 
     lua.RunCommand("numCharacterClasses = characterClassList:NumCharacterTypes()");
     int numCharacterClasses = lua["numCharacterClasses"];
     spdlog::info("Number of character class types: {}", numCharacterClasses);
+
     for(int i = 1; i <= numCharacterClasses; i++)
     {
         lua.RunCommand("characterName = characterClassList.list[" + std::to_string(i) + "].name");
@@ -104,20 +110,23 @@ void battle()
         lua.RunCommand(charName + " = " + className + ":new()");
 
         spdlog::info("Set primary weapon to bow.");
-        lua.RunCommand(charName + ".player:setPrimaryWeapon(bow)");
+        // lua.RunCommand(charName + ":Setup()");
+        lua.RunCommand(charName + ":setPrimaryWeapon(bow)");
+        lua.RunCommand("characterPrimaryWeapon = " + charName + ":getPrimaryWeapon(bow)");
 
-        sol::table weapon = lua["bow"];
+        sol::table weapon = lua["characterPrimaryWeapon"];
         std::string name = weapon["name"];
         int damage = weapon["max_dmg"];
         float speed = weapon["speed"];
 
         spdlog::info("Create enemy.");
-        lua.RunCommand("enemy1 = enemy:new(nil)");
+        lua.RunCommand("enemy1 = Skeleton:create()");
+        lua.RunCommand("enemy1:Setup()");
 
         while(true)
         {
             spdlog::info("Player1 attack!");
-            lua.RunCommand(charName + ".player:attack(enemy1)");
+            lua.RunCommand(charName + ":attack(enemy1)");
 
             std::string enemy_name = lua["enemy1"]["name"];
             float enemy_hp = lua["enemy1"]["hp"];
@@ -132,7 +141,7 @@ void battle()
             }
 
             spdlog::info("Enemy attack!");
-            lua.RunCommand("attack(enemy1, club, " + charName + ")");
+            lua.RunCommand("enemy1:chooseNextSkill(" + charName + ")");
 
             std::string class_type_name = lua[charName]["name"];
             float player_hp = lua[charName]["hp"];

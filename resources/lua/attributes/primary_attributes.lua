@@ -1,8 +1,8 @@
 
-require "dexterity"
-require "intelligence"
-require "strength"
-require "vitality"
+require "attributes.dexterity"
+require "attributes.intelligence"
+require "attributes.strength"
+require "attributes.vitality"
 
 PrimaryAttributeList = {}
 PrimaryAttributeList.__index = PrimaryAttributeList
